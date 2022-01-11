@@ -1,6 +1,6 @@
 // https://www.rosettacode.org/wiki/Category:Sorting_Algorithms
 
-pub fn with_selection(array: &mut [i32]) {
+pub fn with_selection(array: &mut [isize]) {
     let mut min;
 
     for i in 0..array.len() {
@@ -86,7 +86,7 @@ fn merge<T: Copy + PartialOrd>(x1: &[T], x2: &[T], y: &mut [T]) {
     }
 }
 
-pub fn with_quicksort(v: &mut [i32]) {
+pub fn with_quicksort(v: &mut [isize]) {
     return quick_sort(v, &|x, y| x < y);
 }
 
