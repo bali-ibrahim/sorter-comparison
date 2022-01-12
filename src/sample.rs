@@ -7,7 +7,7 @@ fn generate_sample(size: usize) -> Vec<isize> {
     for _ in 0..size {
         vec.push(rand::random());
     }
-    return vec;
+    vec
 }
 
 pub fn write(path: &str, size: usize) -> Result<(), csv::Error> {
@@ -18,6 +18,7 @@ pub fn write(path: &str, size: usize) -> Result<(), csv::Error> {
 pub fn write_to(vec: Vec<isize>, path: &str) -> Result<(), csv::Error> {
     let mut writer = csv::Writer::from_path(path)?;
 
+    writer.write_record(&["values"])?;
     for i in 0..vec.len() {
         writer.write_record(&[vec[i].to_string()])?;
     }
