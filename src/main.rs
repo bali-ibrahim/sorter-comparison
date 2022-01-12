@@ -1,21 +1,15 @@
 mod sample;
 mod sort;
 
-fn main() {
-    match sample::write() {
-        Ok(_) => {}
-        Err(_) => {}
-    }
-    match sample::read() {
-        Ok(mut array) => {
-            // let mut array = [9, 4, 8, 3, -5, 2, 1, 6];
-            println!("The initial array is {:?}", array);
+fn main() -> Result<(), csv::Error> {
+    sample::write()?;
+    let mut array = sample::read()?;
 
-            sort::with_selection(&mut array);
-            sort::with_merge(&mut array);
-            sort::with_quicksort(&mut array);
-            println!("The sorted array is {:?}", array);
-        }
-        Err(_) => {}
-    }
+    let now = std::time::Instant::now();
+    // sort::with_selection(&mut array);
+    // sort::with_merge(&mut array);
+    sort::with_quicksort(&mut array);
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
+    sample::write_to(array, "sorted.csv")
 }

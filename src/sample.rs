@@ -1,6 +1,8 @@
 use rand;
 
-const SIZE: usize = 2_usize.pow(12);
+// const SIZE: usize = 2_usize.pow(18); // thread 'main' has overflowed its stack
+const SIZE: usize = 2_usize.pow(17);
+// const SIZE: usize = 2_usize.pow(16); // selection debug limit 47s
 const SAMPLE_PATH: &str = "./samples/sample.csv";
 
 fn generate_sample() -> [isize; SIZE] {
@@ -14,7 +16,11 @@ fn generate_sample() -> [isize; SIZE] {
 pub fn write() -> Result<(), csv::Error> {
     let my_array = generate_sample();
     std::fs::create_dir_all("./samples")?;
-    let mut writer = csv::Writer::from_path(SAMPLE_PATH)?;
+    write_to(my_array, SAMPLE_PATH)
+}
+
+pub fn write_to(my_array: [isize; SIZE], path: &str) -> Result<(), csv::Error> {
+    let mut writer = csv::Writer::from_path(path)?;
 
     for i in 0..my_array.len() {
         writer.write_record(&[my_array[i].to_string()])?;
