@@ -47,7 +47,7 @@ struct Args {
     output: Option<String>,
 
     /// Size of the array to be written in the generated sample
-    #[clap(short, long, default_value_t = 2_usize.pow(14))]
+    #[clap(short, long, default_value_t = 2_usize.pow(16))]
     size: usize,
 
     /// Sort using the algorithm chosen
