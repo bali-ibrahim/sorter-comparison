@@ -47,7 +47,8 @@ struct Args {
     output: Option<String>,
 
     /// Size of the array to be written in the generated sample
-    #[clap(short, long, default_value_t = 2_usize.pow(16))]
+    // #[clap(short, long, default_value_t = 2_usize.pow(16))]
+    #[clap(short, long, default_value_t = 100_000)]
     size: usize,
 
     /// Sort using the algorithm chosen
@@ -70,6 +71,7 @@ impl Default for Sorter {
 
 #[derive(Debug)]
 struct Results {
+    path: String,
     number_of: NumberOf,
     elapsed: Duration,
 }
@@ -95,6 +97,7 @@ fn main() {
 
 fn read_n_sort(args: &Args) -> Result<Vec<isize>, csv::Error> {
     let mut results = Results {
+        path: args.path.to_owned(),
         number_of: NumberOf::default(),
         elapsed: Duration::default(),
     };
