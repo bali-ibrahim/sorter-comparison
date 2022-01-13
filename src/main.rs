@@ -1,6 +1,7 @@
-use std::path::Path;
+use std::{path::Path, time::Duration};
 
 use clap::{ArgEnum, ArgGroup, Parser};
+use sort::NumberOf;
 mod file;
 mod sample;
 mod sort;
@@ -44,21 +45,31 @@ impl Default for Sorter {
     }
 }
 
+#[derive(Debug)]
+struct Results {
+    number_of: NumberOf,
+    elapsed: Duration,
+}
+
 fn main() -> Result<(), csv::Error> {
     let args = Args::parse();
     if args.generate {
         sample::write(&args.path, args.size)?;
     }
     let mut vec = sample::read(&args.path)?;
+    let mut results = Results {
+        number_of: NumberOf::default(),
+        elapsed: Duration::default(),
+    };
 
     let now = std::time::Instant::now();
     match args.sorter {
-        Sorter::Selection => sort::with_selection(&mut vec),
-        Sorter::Merge => sort::with_merge(&mut vec),
-        Sorter::QuickSort => sort::with_quicksort(&mut vec),
+        Sorter::Selection => results.number_of = sort::with_selection(&mut vec),
+        Sorter::Merge => results.number_of = sort::with_merge(&mut vec),
+        Sorter::QuickSort => results.number_of = sort::with_quicksort(&mut vec),
     };
-    let elapsed = now.elapsed();
-    println!("Elapsed:\n{:.2?}", elapsed);
+    results.elapsed = now.elapsed();
+    println!("{:?}", results);
 
     let basename = Path::new(&args.path).file_stem().unwrap().to_str().unwrap();
     let sorted_file_name = format!("sorted-{}", &basename);
