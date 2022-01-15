@@ -8,7 +8,7 @@ mod sort;
 
 const SAMPLE_FILE_NAME: &str = "sample.csv";
 
-/// Compare sort algorithms, sorted file will be prefixed with sorted in the same directory of the read file.
+/// Compare sort algorithms
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 #[clap(group(
