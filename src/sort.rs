@@ -20,13 +20,13 @@ pub fn with_selection(array: &mut Vec<isize>) -> NumberOf {
             if array[j] < array[min] {
                 min = j;
             }
-            number_of.comparisons = number_of.comparisons + 1;
+            number_of.comparisons += 1;
         }
 
         let tmp = array[i];
         array[i] = array[min];
         array[min] = tmp;
-        number_of.assignments = number_of.assignments + 2;
+        number_of.assignments += 2;
     }
     number_of
 }
@@ -45,6 +45,7 @@ pub fn with_merge<T: Copy + PartialOrd>(x: &mut Vec<T>) -> NumberOf {
         while i < n {
             if i + len >= n {
                 y[i..].copy_from_slice(&x[i..]);
+                number_of.assignments += y[i..].len();
             } else if i + 2 * len > n {
                 merge(&x[i..i + len], &x[i + len..], &mut y[i..], &mut number_of);
             } else {
@@ -60,12 +61,14 @@ pub fn with_merge<T: Copy + PartialOrd>(x: &mut Vec<T>) -> NumberOf {
         len *= 2;
         if len >= n {
             x.copy_from_slice(&y);
+            number_of.assignments += x.len();
             return number_of;
         }
         i = 0;
         while i < n {
             if i + len >= n {
                 x[i..].copy_from_slice(&y[i..]);
+                number_of.assignments += x[i..].len();
             } else if i + 2 * len > n {
                 merge(&y[i..i + len], &y[i + len..], &mut x[i..], &mut number_of);
             } else {
@@ -98,8 +101,8 @@ fn merge<T: Copy + PartialOrd>(x1: &[T], x2: &[T], y: &mut [T], number_of: &mut 
             k += 1;
             j += 1;
         }
-        number_of.assignments = number_of.assignments + 1;
-        number_of.comparisons = number_of.comparisons + 1;
+        number_of.assignments += 1;
+        number_of.comparisons += 1;
     }
     if i < x1.len() {
         y[k..].copy_from_slice(&x1[i..]);
@@ -139,18 +142,19 @@ where
     let last_index = len - 1;
 
     v.swap(pivot_index, last_index);
+    number_of.assignments += 1;
 
     let mut store_index = 0;
     for i in 0..last_index {
         if f(&v[i], &v[last_index]) {
             v.swap(i, store_index);
             store_index += 1;
-            number_of.assignments = number_of.assignments + 2;
+            number_of.assignments += 2;
         }
-        number_of.comparisons = number_of.comparisons + 1;
+        number_of.comparisons += 1;
     }
 
     v.swap(store_index, len - 1);
-    number_of.assignments = number_of.assignments + 2;
+    number_of.assignments += 2;
     store_index
 }
